@@ -123,6 +123,44 @@ void terminal_writestring(const char* data)
 	terminal_write(data, strlen(data));
 }
 
+void newline_test() {
+	terminal_writestring("Hello, kernel World, second line!\n");
+}
+
+void scrolling_test() {
+	for (int i = 0; i < 30; i++) {
+		terminal_writestring("Scrolling test line.\n");
+	}
+}
+
+void colorful_ascii_art_test() {
+	const char* art[] = {
+		"   *****   ",
+		"  *     *  ",
+		" *       * ",
+		" *       * ",
+		"  *     *  ",
+		"   *****   "
+	};
+
+	enum vga_color colors[] = {
+		VGA_COLOR_LIGHT_RED,
+		VGA_COLOR_LIGHT_GREEN,
+		VGA_COLOR_LIGHT_BLUE,
+		VGA_COLOR_LIGHT_CYAN,
+		VGA_COLOR_LIGHT_MAGENTA,
+		VGA_COLOR_LIGHT_BROWN
+	};
+
+	for (size_t i = 0; i < sizeof(art) / sizeof(art[0]); i++) {
+		terminal_setcolor(vga_entry_color(colors[i], VGA_COLOR_BLACK));
+		terminal_writestring(art[i]);
+		terminal_putchar('\n');
+	}
+
+	terminal_setcolor(vga_entry_color(VGA_COLOR_LIGHT_GREY, VGA_COLOR_BLACK));
+}
+
 extern "C" {
 	void kernel_main(void) 
 	{
@@ -131,11 +169,12 @@ extern "C" {
 
 		/* Newline support showcase */
 		terminal_writestring("Hello, kernel World!\n");
-		terminal_writestring("Hello, kernel World, second line!\n");
+		// newline_test();
 
 		/* Terminal scrolling support showcase */
-		for (int i = 0; i < 30; i++) {
-			terminal_writestring("Scrolling test line.\n");
-		}
+		// scrolling_test();
+
+		/* Colorful ASCII art rendering showcase */
+		colorful_ascii_art_test();
 	}
 }
