@@ -61,6 +61,53 @@ void terminal_putchar(char c) {
 	int line;
 	unsigned char uc = c;
 
+	if (c == '\n') { // Newline
+		terminal_column = 0;
+		if (++terminal_row == VGA_HEIGHT)
+		{
+			for(line = 1; line <= VGA_HEIGHT - 1; line++)
+			{
+				terminal_scroll(line);
+			}
+			terminal_delete_last_line();
+			terminal_row = VGA_HEIGHT - 1;
+		}
+		return;
+	}
+	else if (c == '\r') { // Carriage return
+		terminal_column = 0;
+		return;
+	}
+	else if (c == '\b') { // Backspace
+		if (terminal_column > 0) {
+			terminal_column--;
+		}
+		else if (terminal_row > 0) {
+			terminal_row--;
+			terminal_column = VGA_WIDTH - 1;
+		}
+		terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+		return;
+	}
+	else if (c == '\t') { // Horizontal tab
+		do {
+			terminal_putentryat(' ', terminal_color, terminal_column, terminal_row);
+		} while (++terminal_column % 4 != 0);
+		return;
+	}
+	else if (c == '\v') { // Vertical tab
+		terminal_row++;
+		return;
+	}
+	else if (c == '\f') { // Form feed
+		terminal_initialize();
+		return;
+	}
+	else if (c == '\a') { // Bell
+		// TODO: implement bell
+		return;
+	}
+
 	terminal_putentryat(uc, terminal_color, terminal_column, terminal_row);
 	if (++terminal_column == VGA_WIDTH) {
 		terminal_column = 0;
