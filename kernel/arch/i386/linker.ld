@@ -19,31 +19,38 @@ SECTIONS
 	. += 0xC0000000;
 
 	/* Executable code. */
-	.text BLOCK(4K) : AT (ADDR (.text) - 0xC0000000)
+	_text_start = .;
+	.text ALIGN(4K) : AT (ADDR (.text) - 0xC0000000)
 	{
-		*(.multiboot)
 		*(.text)
 	}
+	_text_end = .;
 
 	/* Read-only data. */
-	.rodata BLOCK(4K) : AT (ADDR (.rodata) - 0xC0000000)
+	_rodata_start = .;
+	.rodata ALIGN(4K) : AT (ADDR (.rodata) - 0xC0000000)
 	{
 		*(.rodata)
 	}
+	_rodata_end = .;
 
 	/* Read-write data (initialized) */
-	.data BLOCK(4K) : AT (ADDR (.data) - 0xC0000000)
+	_data_start = .;
+	.data ALIGN(4K) : AT (ADDR (.data) - 0xC0000000)
 	{
 		*(.data)
 	}
+	_data_end = .;
 
 	/* Read-write data (uninitialized) and stack */
-	.bss BLOCK(4K) : AT (ADDR (.bss) - 0xC0000000)
+	_bss_start = .;
+	.bss ALIGN(4K) : AT (ADDR (.bss) - 0xC0000000)
 	{
 		*(COMMON)
 		*(.bss)
 		*(.bootstrap_stack)
 	}
+	_bss_end = .;
 
 	_kernel_end = .;
 }
