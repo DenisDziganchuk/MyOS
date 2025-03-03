@@ -9,7 +9,7 @@
 
 static const size_t VGA_WIDTH = 80;
 static const size_t VGA_HEIGHT = 25;
-static uint16_t* const VGA_MEMORY = (uint16_t*) 0xB8000;
+static uint16_t* const VGA_MEMORY = (uint16_t*) 0xC03FF000;
 
 static size_t terminal_row;
 static size_t terminal_column;
@@ -42,7 +42,7 @@ void terminal_scroll(int line) {
 	int loop;
 	char c;
 
-	for(loop = line * (VGA_WIDTH * 2) + 0xB8000; loop < VGA_WIDTH * 2; loop++) {
+	for(loop = line * (VGA_WIDTH * 2) + 0xC03FF000; loop < VGA_WIDTH * 2; loop++) {
 		c = *(char*)loop;
 		*(char*)(loop - (VGA_WIDTH * 2)) = c;
 	}
@@ -52,7 +52,7 @@ void terminal_delete_last_line() {
 	int x, *ptr;
 
 	for(x = 0; x < VGA_WIDTH * 2; x++) {
-		ptr = (int*)(0xB8000 + (VGA_WIDTH * 2) * (VGA_HEIGHT - 1) + x);
+		ptr = (int*)(0xC03FF000 + (VGA_WIDTH * 2) * (VGA_HEIGHT - 1) + x);
 		*ptr = 0;
 	}
 }
