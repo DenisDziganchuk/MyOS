@@ -14,10 +14,10 @@ void idt_load() {
 
 void idt_set_entry(struct idt_entry* entry, uint32_t base, uint16_t selector, uint8_t flags) {
 	entry->base_low = base & 0xFFFF;
-	entry->base_high = (base >> 16) & 0xFFFF;
 	entry->selector = selector;
 	entry->zero = 0;
 	entry->flags = flags | 0x60;
+	entry->base_high = (base >> 16) & 0xFFFF;
 }
 
 void idt_initialize() {
